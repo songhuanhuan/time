@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas钟表</title>
+	<style>
+  	body{
+  		margin: 0;
+  	}
+    canvas{
+     	display: block;
+     	margin: 0 auto;
+     	position: relative;
+    }
+	</style>
+</head>
+<body>
+	<canvas width=600 height=500></canvas>
+	<script>
+      var can=document.getElementsByTagName('canvas')[0];
+      var cobj=can.getContext("2d");
+          clock();
+          setInterval(clock,1000);
+
+          function clock(){
+            var now = new Date();
+            var sec = now.getSeconds();
+            var min = now.getMinutes();
+            var hour = now.getHours();
+                hour=hour >=12?hour-12:hour;
+                hour += (min/60);
+            // alert(hour)
+            // alert(min)
+            // alert(sec)
+
+            //先清空画布
+                cobj.clearRect(0,0,600,500);
+           // 外框
+            cobj.beginPath();
+            cobj.lineWidth=10;
+            cobj.strokeStyle="#ccc";
+            cobj.arc(300,250,200,0,Math.PI*2,false);
+            cobj.stroke();
+            cobj.closePath();
+           //圆心
+            cobj.beginPath();
+            cobj.lineWidth=10;
+            cobj.strokeStyle="#ccc";
+            cobj.arc(300,250,10,0,Math.PI*2,false);
+            cobj.fill();
+            cobj.closePath();
+           //时刻度
+            for (var i = 0; i < 12; i++) {
+                cobj.save();
+                cobj.lineWidth = 7;
+                cobj.strokeStyle = "#000";
+                //设置原点
+                cobj.translate(300, 250);
+                //设置旋转角度
+                cobj.rotate(30 * i * Math.PI / 180);//弧度   角度*Math.PI/180
+                cobj.beginPath();
+                cobj.moveTo(0, -175);
+                cobj.lineTo(0, -195);
+                cobj.stroke();
+                cobj.closePath();
+                cobj.restore();//把原来状态恢复回来
+            }
+             //分刻度
+            for (var i = 0; i < 60; i++) {
+            	if(i%5!=0){
+            		cobj.save();
+	                cobj.lineWidth = 5;
+	                cobj.strokeStyle = "brown";
+	                cobj.translate(300, 250);
+	                cobj.rotate(i * 6 * Math.PI / 180);
+	                cobj.beginPath();
+	                cobj.moveTo(0, -185);
+	                cobj.lineTo(0, -195);
+	                cobj.stroke();
+	                cobj.closePath();
+	                cobj.restore();
+            	}
+            }
+           //num
+           cobj.font="30px bold";
+           cobj.fillText("3",460,260);
+           cobj.fillText("12",285,100);
+           cobj.fillText("9",130,260);
+           cobj.fillText("6",290,420);
+           // 秒针
+           cobj.save();
+           cobj.translate(300,250);
+           cobj.rotate(sec*6*Math.PI/180-Math.PI);
+           cobj.beginPath(); 
+           cobj.fillStyle="red";
+           cobj.rect(0,0,2,160); 
+           cobj.fill();
+           cobj.closePath();
+           cobj.restore();
+          // 分针
+           cobj.save();  
+           cobj.translate(300,250);
+           cobj.rotate(min*Math.PI/30-Math.PI);
+           cobj.beginPath(); 
+           cobj.fillStyle="brown";
+           cobj.rect(0,0,4,130); 
+           cobj.fill();
+           cobj.closePath();
+           cobj.restore();
+           // 时针
+           cobj.save();
+           cobj.translate(300,250); 
+           cobj.rotate(30*hour*Math.PI/180-Math.PI);
+           cobj.beginPath(); 
+           cobj.fillStyle="black";
+           cobj.rect(0,0,7,100); 
+           cobj.fill();
+           cobj.closePath();
+           cobj.restore();
+       }
+	</script>
+</body>
+</html>
